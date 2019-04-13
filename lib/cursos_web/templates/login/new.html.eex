@@ -1,0 +1,10 @@
+<h1>Login</h1>
+<%= form_for @conn, Routes.login_path(@conn, :create), [as: :loggin], fn f -> %>
+  <div>
+    <%= text_input f, :username, [placeholder: "Usuario", autocomplete: "off"] %>
+  </div>
+  <div>
+    <%= password_input f, :password_hash, placeholder: "Contraseña" %>
+  </div>
+  <%= submit"Iniciar sesión" %>
+<% end %>

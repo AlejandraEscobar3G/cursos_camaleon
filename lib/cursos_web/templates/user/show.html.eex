@@ -1,0 +1,6 @@
+<h1>Usuario <%= @user.id %></h1>
+<br><br>
+<p>Nombre: <b><%= @user.name %></b></p>
+<p>Alías: <b><%= @user.username %></b></p>
+<br><br>
+<p><%= first_name(@user) %></p>
