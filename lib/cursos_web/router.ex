@@ -22,6 +22,12 @@ defmodule CursosWeb.Router do
     resources "/login", LoginController, only: [:new, :create, :delete]
   end
 
+  scope "/manage", CursosWeb do
+    pipe_through [:browser, :authenticate_user]
+
+    resources "/videos", VideoController
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", CursosWeb do
   #   pipe_through :api

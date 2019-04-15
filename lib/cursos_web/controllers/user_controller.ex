@@ -1,9 +1,11 @@
 defmodule CursosWeb.UserController do
     use CursosWeb, :controller
 
+    import CursosWeb.Auth
+
     alias Cursos.Accounts
 
-    plug :authenticate when action in [:index, :show]
+    plug :authenticate_user when action in [:index, :show]
     
     def index(conn, __params) do
         users = Accounts.list_users()
@@ -34,17 +36,6 @@ defmodule CursosWeb.UserController do
 
     def login(conn, user) do
         conn
-        |> CursosWeb.Auth.login(user)
-    end
-
-    defp authenticate(conn, _opts) do
-        if conn.assigns.current_user do
-            conn
-        else
-            conn
-            |> put_flash(:error, "Debes iniciar sesión para poder acceder")
-            |> redirect(to: Routes.page_path(conn, :index))
-            |> halt()
-        end
+        |> CursosWeb.Auth.login_user(user)
     end
 end

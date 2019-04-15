@@ -23,6 +23,7 @@ defmodule CursosWeb do
 
       import Plug.Conn
       import CursosWeb.Gettext
+      import CursosWeb.Auth, only: [authenticate_user: 2]
       alias CursosWeb.Router.Helpers, as: Routes
     end
   end
@@ -50,6 +51,7 @@ defmodule CursosWeb do
       use Phoenix.Router
       import Plug.Conn
       import Phoenix.Controller
+      import CursosWeb.Auth, only: [authenticate_user: 2]
     end
   end
 
