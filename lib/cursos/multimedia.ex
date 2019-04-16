@@ -4,9 +4,12 @@ defmodule Cursos.Multimedia do
   """
 
   import Ecto.Query, warn: false
+  
   alias Cursos.Repo
 
   alias Cursos.Multimedia.Video
+  alias Cursos.Accounts
+  alias Cursos.Multimedia.Category
 
   @doc """
   Returns the list of videos.
@@ -18,7 +21,9 @@ defmodule Cursos.Multimedia do
 
   """
   def list_videos do
-    Repo.all(Video)
+    Video
+    |> Repo.all()
+    |> preload_user()
   end
 
   @doc """
@@ -35,7 +40,7 @@ defmodule Cursos.Multimedia do
       ** (Ecto.NoResultsError)
 
   """
-  def get_video!(id), do: Repo.get!(Video, id)
+  def get_video!(id), do: preload_user(Repo.get!(Video, id))
 
   @doc """
   Creates a video.
@@ -49,9 +54,10 @@ defmodule Cursos.Multimedia do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_video(attrs \\ %{}) do
+  def create_video(%Accounts.User{} = user, attrs \\ %{}) do
     %Video{}
     |> Video.changeset(attrs)
+    |> put_user(user)
     |> Repo.insert()
   end
 
@@ -98,7 +104,45 @@ defmodule Cursos.Multimedia do
       %Ecto.Changeset{source: %Video{}}
 
   """
-  def change_video(%Video{} = video) do
-    Video.changeset(video, %{})
+  def change_video(%Accounts.User{} = user, %Video{} = video) do
+    video
+    |> Video.changeset(%{})
+    |> put_user(user)
+  end
+
+  defp put_user(changeset, user) do
+    Ecto.Changeset.put_assoc(changeset, :user, user)
+  end
+
+  def list_user_videos(%Accounts.User{} = user) do
+    Video
+    |> user_videos_query(user)
+    |> Repo.all()
+    |> preload_user()
+  end
+
+  def get_user_video!(%Accounts.User{} = user, id) do
+    from(v in Video, where: v.id == ^id)
+    |> user_videos_query(user)
+    |> Repo.one!
+    |> preload_user()
+  end
+
+  defp user_videos_query(query, %Accounts.User{id: user_id}) do
+    from(v in query, where: v.user_id == ^user_id)
+  end
+
+  defp preload_user(video_or_videos) do
+    Repo.preload(video_or_videos, :user)
+  end
+
+  def create_category(name) do
+    Repo.get_by(Category, name: name) || Repo.insert!(%Category{name: name})
+  end
+
+  def list_alphabetical_categories do
+    Category
+    |> Category.alphabetical()
+    |> Repo.all()
   end
 end
