@@ -22,6 +22,7 @@ defmodule Cursos.DataCase do
       import Ecto.Changeset
       import Ecto.Query
       import Cursos.DataCase
+      import Cursos.TestHelpers
     end
   end
 

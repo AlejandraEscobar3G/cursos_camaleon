@@ -16,7 +16,6 @@ defmodule Cursos.Accounts.User do
         |> validate_required([:name, :username, :password_hash])
         |> validate_length(:name, min: 1, max: 20)
         |> validate_length(:username, min: 5, max: 5)
-        |> validate_length(:password_hash, min: 8, max: 8)
         |> put_pass_hash()
     end
 
