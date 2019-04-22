@@ -7,37 +7,38 @@ defmodule Cursos.AccountsTest do
   describe "create_user/1" do
     @valid_attrs %{
       name: "Administrador",
-      username: "ADMIN"
+      username: "ADMIN",
+      password_hash: "12345678"
     }
     @invalid_attrs %{}
 
-    test "with valid data inserts user" do
+    test "Con datos válidos, insertar usuario" do
       assert {:ok, %User{id: id} = user} = Accounts.create_user(@valid_attrs)
       assert user.name == "Administrador"
       assert user.username == "ADMIN"
       assert [%User{id: ^id}] = Accounts.list_users()
     end
 
-    test "with invalid data does not insert user" do
+    test "Con datos inválidos, no insertar usuario" do
       assert {:error, _changeset} = Accounts.create_user(@invalid_attrs)
       assert Accounts.list_users() == []
     end
 
-    test "enforces unique usernames" do
+    test "Haga cumplir nombre de usuario único" do
       assert {:ok, %User{id: id}} = Accounts.create_user(@valid_attrs)
       assert {:error, changeset} = Accounts.create_user(@valid_attrs)
 
-      assert %{username: ["Ya existe"]} =
+      assert %{name: ["Ya existe"]} =
         errors_on(changeset)
 
       assert [%User{id: ^id}] = Accounts.list_users()
     end
 
-    test "does not accept long usernames" do
+    test "No acepta nombres de usuario largos" do
       attrs = Map.put(@valid_attrs, :username, String.duplicate("a", 30))
       {:error, changeset} = Accounts.create_user(attrs)
 
-      assert %{username: ["Debe contener máximo 20 caracteres"]} =
+      assert %{username: ["Debe contener máximo 5 caracteres"]} =
         errors_on(changeset)
       assert Accounts.list_users() == []
     end
