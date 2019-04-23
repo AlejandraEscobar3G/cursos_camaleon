@@ -2,6 +2,7 @@ let Player = {
   player: null,
 
   init(domId, playerId, onReady) {
+    
     window.onYouTubeIframeAPIReady = () => {
       this.onIframeReady(domId, playerId, onReady)
     }
