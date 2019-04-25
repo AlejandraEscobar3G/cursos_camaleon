@@ -10,6 +10,7 @@ defmodule Cursos.Multimedia.Video do
     field :slug, :string
     belongs_to :user, Cursos.Accounts.User
     belongs_to :category, Cursos.Multimedia.Category
+    has_many :annotations, Cursos.Multimedia.Annotation
 
     timestamps()
   end

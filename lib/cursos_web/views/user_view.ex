@@ -1,11 +1,14 @@
 defmodule CursosWeb.UserView do
-    use CursosWeb, :view
+  use CursosWeb, :view
+  alias Cursos.Accounts
 
-    alias Cursos.Accounts
+  def first_name(%Accounts.User{name: name}) do
+    name
+    |> String.split(" ")
+    |> Enum.at(0)
+  end
 
-    def first_name(%Accounts.User{name: name}) do
-        name
-        |> String.split(" ")
-        |> Enum.at(0)
-    end
+  def render("user.json", %{user: user}) do
+    %{id: user.id, username: user.username}
+  end
 end
